@@ -27,12 +27,16 @@ unzip "${ETPRO_CONF_ZIP_PATH}" -d "${TMP_PATH}"
 
 cp -r "${TMP_PATH}/"* "${WET_DIR}/"
 
+# Cleanup.
+rm -rf "${TMP_PATH}"
+
+cat > "${WET_DIR}/run-etpro.sh" <<EOL
+#!/usr/bin/env bash
+EOL
+
 # Last correction for ownership and permissions.
 chown -R 'wet:wet' "${WET_DIR}"
 chmod -R o-rwx "${WET_DIR}"
-
-# Cleanup.
-rm -rf "${TMP_PATH}"
 
 echo '> Finished.'
 
