@@ -3,11 +3,10 @@
 
 Vagrant.configure("2") do |config|
     config.vm.box = "debian/stretch64"
+    config.vm.network "public_network", type: "dhcp"
+    config.vm.synced_folder "../..", "/vagrant", type: "rsync", rsync__exclude: ".git/"
 
-    config.vm.network "forwarded_port", guest: 27960, host: 27960
-    config.vm.synced_folder "../..", "/vagrant"
-
-    config.vm.provider "virtualbox" do |vb|4
+    config.vm.provider "virtualbox" do |vb|
         vb.name = "wet-server-setup-debian"
         vb.cpus = 1
         vb.memory = "1024"
@@ -15,5 +14,6 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision "shell", inline: <<-SHELL
         bash /vagrant/setup/debian/install-software.sh
+        usermod -aG wet vagrant
     SHELL
 end

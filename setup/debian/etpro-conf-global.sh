@@ -4,6 +4,8 @@ WET_UID='27960'
 WET_GID='27960'
 WET_DIR='/srv/wet'
 
+RELATIVE_PATH=$(dirname ${0})
+
 if [[ "${UID}" != '0' ]]; then
     echo '> You need to become root to run this script.'
     exit 1
@@ -25,18 +27,40 @@ fi
 TMP_PATH="/tmp/etpro-conf-global-$(date +%s)"
 unzip "${ETPRO_CONF_ZIP_PATH}" -d "${TMP_PATH}"
 
-cp -r "${TMP_PATH}/"* "${WET_DIR}/"
+cp -r "${TMP_PATH}/"* "${WET_DIR}/etpro"
 
 # Cleanup.
 rm -rf "${TMP_PATH}"
 
+if [[ ! -d "${WET_DIR}/etmain/serverconfigs" ]]; then
+    mkdir -p "${WET_DIR}/etmain/serverconfigs"
+fi
+
+if [[ ! -f "${WET_DIR}/etmain/serverconfigs/etpro.cfg" ]]; then
+    cp "${RELATIVE_PATH}/../../configs/etpro.cfg" "${WET_DIR}/etmain/serverconfigs/"
+fi
+
+if [[ ! -f "${WET_DIR}/etmain/maprotation.cfg" ]]; then
+    cp "${RELATIVE_PATH}/../../configs/maprotation.cfg" "${WET_DIR}/etmain/"
+fi
+
 cat > "${WET_DIR}/run-etpro.sh" <<EOL
 #!/usr/bin/env bash
+
+linux32 ${WET_DIR}/etded.x86 \\
+    +set dedicated 2 \\
+    +set net_port 27960 \\
+    +set fs_game etpro \\
+    +set fs_homepath servers/27960 \\
+    +set sv_punkbuster 0 \\
+    +exec serverconfigs/etpro.cfg
+
 EOL
+
+chmod +x  "${WET_DIR}/run-etpro.sh"
 
 # Last correction for ownership and permissions.
 chown -R 'wet:wet' "${WET_DIR}"
 chmod -R o-rwx "${WET_DIR}"
 
 echo '> Finished.'
-

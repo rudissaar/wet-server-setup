@@ -39,4 +39,3 @@ chmod -R o-rwx "${WET_DIR}"
 rm -rf "${TMP_PATH}"
 
 echo '> Finished.'
-
