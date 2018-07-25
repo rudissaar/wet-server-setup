@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "debian/stretch64"
+
+    config.vm.network "forwarded_port", guest: 27960, host: 27960
+    config.vm.synced_folder "../..", "/vagrant"
+
+    config.vm.provider "virtualbox" do |vb|4
+        vb.name = "wet-server-setup-debian"
+        vb.cpus = 1
+        vb.memory = "1024"
+    end
+
+    config.vm.provision "shell", inline: <<-SHELL
+        bash /vagrant/setup/debian/install-software.sh
+    SHELL
+end
