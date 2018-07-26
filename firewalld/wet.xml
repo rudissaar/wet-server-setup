@@ -1,0 +1,5 @@
+<service>
+    <short>WET</short>
+    <description>Wolfenstein: Enemy Territory Server</description>
+    <port protocol="udp" port="27960"/>
+</service>
