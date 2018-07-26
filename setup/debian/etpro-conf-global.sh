@@ -57,7 +57,8 @@ linux32 ${WET_DIR}/etded.x86 \\
 
 EOL
 
-chmod +x  "${WET_DIR}/run-etpro.sh"
+chmod +x "${WET_DIR}/run-etpro.sh"
+ln -sf "${WET_DIR}/run-etpro.sh" "${WET_DIR}/run.sh"
 
 # Last correction for ownership and permissions.
 chown -R 'wet:wet' "${WET_DIR}"
