@@ -40,10 +40,6 @@ if [[ ! -f "${WET_DIR}/etmain/serverconfigs/etpro.cfg" ]]; then
     cp "${RELATIVE_PATH}/../../configs/etpro.cfg" "${WET_DIR}/etmain/serverconfigs/"
 fi
 
-if [[ ! -f "${WET_DIR}/etmain/maprotation.cfg" ]]; then
-    cp "${RELATIVE_PATH}/../../configs/maprotation.cfg" "${WET_DIR}/etmain/"
-fi
-
 cat > "${WET_DIR}/run-etpro.sh" <<EOL
 #!/usr/bin/env bash
 
@@ -53,6 +49,7 @@ linux32 ${WET_DIR}/etded.x86 \\
     +set fs_game etpro \\
     +set fs_homepath servers/27960 \\
     +set sv_punkbuster 0 \\
+    +map te_valhalla \\
     +exec serverconfigs/etpro.cfg
 
 EOL

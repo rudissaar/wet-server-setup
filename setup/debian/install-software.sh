@@ -32,7 +32,7 @@ useradd \
     --gid "${WET_GID}" \
     --home-dir "${WET_DIR}" \
     --comment 'Wolfenstein Enemy Territory Server' \
-    --shell '/bin/sh' \
+    --shell '/bin/bash' \
     wet
 
 if ! [[ -f "${WET_DIR}" ]]; then
