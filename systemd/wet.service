@@ -1,0 +1,14 @@
+[Unit]
+Description=Wolfenstein Enemy Territory 2.60b Server
+After=network.target
+
+[Service]
+WorkingDirectory=/srv/wet
+User=wet
+Group=wet
+ExecStart=/srv/wet/run.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
