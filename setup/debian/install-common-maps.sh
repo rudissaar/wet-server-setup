@@ -9,12 +9,18 @@ if [[ "${UID}" != '0' ]]; then
 fi
 
 MAPS=( \
+    'adlernest.pk3' \
+    'sp_delivery_te.pk3' \
+    'supply.pk3' \
+    'sw_goldrush_te.pk3' \
     'te_valhalla.pk3' \
 )
 
 for MAP in ${MAPS[@]}
 do
-    wget "${MAPS_URL}${MAP}" -O "${WET_DIR}/etmain/${MAP}"
+    if [[ ! -f "${WET_DIR}/etmain/${MAP}" ]]; then
+        wget "${MAPS_URL}${MAP}" -O "${WET_DIR}/etmain/${MAP}"
+    fi
 done
 
 # Last correction for ownership and permissions.
