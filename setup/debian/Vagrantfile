@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision "shell", inline: <<-SHELL
         bash /vagrant/setup/debian/install-software.sh
-        bash /vagrant/setup/debian/install-common-maps.sh
+        bash /vagrant/setup/common/install-common-maps.sh
         bash /vagrant/setup/debian/integrate-systemd.sh
 
         usermod -aG wet vagrant
