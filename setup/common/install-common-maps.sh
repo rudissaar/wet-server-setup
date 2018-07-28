@@ -8,7 +8,7 @@ if [[ "${UID}" != '0' ]]; then
     exit 1
 fi
 
-if [[ ! -d "${WET_DIR}" ]] || [[ -d "${WET_DIR}/etmain" ]]; then
+if [[ ! -d "${WET_DIR}" ]] || [[ ! -d "${WET_DIR}/etmain" ]]; then
     echo "> Destination directory doesn't exist, terminating."
     exit 1
 fi
