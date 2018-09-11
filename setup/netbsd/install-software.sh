@@ -20,6 +20,11 @@ fi
 # Install packages.
 pkg_add -v \
     suse32_base \
+    suse32_compat \
+    suse32_libcurl \
+    suse32_libdrm \
+    suse32_glx \
+    suse32_x11 \
     sudo \
     ntp \
     unzip \
