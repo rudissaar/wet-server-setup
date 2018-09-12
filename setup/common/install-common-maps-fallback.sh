@@ -3,6 +3,7 @@
 WET_DIR='/srv/wet'
 MAPS_URL='http://legacy.murda.eu/downloads/wet/maps/'
 
+# You need root permissions to run this script.
 if [ "$(id -u)" != '0' ]; then
     echo '> You need to become root to run this script.'
     exit 1
