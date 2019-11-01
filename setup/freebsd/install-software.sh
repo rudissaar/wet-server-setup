@@ -40,8 +40,8 @@ chown -R 'wet:wet' "${WET_DIR}"
 chmod 2750 "${WET_DIR}"
 
 # Enable Linux kernel module.
-kldload linux
 sysrc linux_enable="YES"
+kldload linux
 
 if [ -z "${1}" ]; then
     WET_ZIP_URL='http://filebase.trackbase.net/et/full/et260b.x86_full.zip'
@@ -74,9 +74,11 @@ cp "${INSTALLER_PATH}/bin/FreeBSD/x86/etded.x86" "${WET_DIR}"
 cp -r "${INSTALLER_PATH}/etmain" "${WET_DIR}"
 cp -r "${INSTALLER_PATH}/pb" "${WET_DIR}"
 
-# Last correction for ownership and permissions.
+# Last correction for ownership, permissions and flags.
 chown -R 'wet:wet' "${WET_DIR}"
 chmod -R o-rwx "${WET_DIR}"
+chmod +x "${WET_DIR}/etded.x86"
+brandelf -t Linux "${WET_DIR}/etded.x86"
 
 # Cleanup.
 rm -rf "${INSTALLER_PATH}"
