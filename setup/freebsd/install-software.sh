@@ -12,6 +12,7 @@ fi
 
 # Install packages.
 pkg install -y \
+    linux_base-c6 \
     unzip \
     wget
 
@@ -37,6 +38,10 @@ fi
 
 chown -R 'wet:wet' "${WET_DIR}"
 chmod 2750 "${WET_DIR}"
+
+# Enable Linux kernel module.
+kldload linux
+sysrc linux_enable="YES"
 
 if [ -z "${1}" ]; then
     WET_ZIP_URL='http://filebase.trackbase.net/et/full/et260b.x86_full.zip'
