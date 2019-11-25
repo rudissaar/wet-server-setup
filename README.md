@@ -42,3 +42,17 @@ After integration you can start your server by executing command:
 If you would like your server to start automatically when host machine boots up enter command:
 
 `systemctl enable wet`
+
+#### FreeBSD
+
+<img src="https://img.shields.io/badge/freebsd-12-green.png" alt="FreeBSD 12" title="Tested">
+
+After downloading/cloning repository navigate to directory `setup/freebsd`.
+
+Then execute following scripts with `sh` shell in given order:
+
+1. [install-software.sh](setup/freebsd/install-software.sh)
+2. [install-common-maps.sh](setup/common/install-common-maps-fallback.sh)
+3. [etpro-install.sh](setup/common/etpro-install-fallback.sh)
+4. [etpro-conf-global.sh](setup/common/etpro-conf-global-fallback.sh)
+
