@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
+# Script that installs Wolfenstein Enemy Territory software on current system.
 
+WET_USER='wet'
 WET_UID='27960'
 WET_GID='27960'
-WET_DIR='/srv/wet'
+WET_DIR="/srv/${WET_USER}"
 
 if [[ "${UID}" != '0' ]]; then
     echo '> You need to become root to run this script.'
@@ -43,13 +45,14 @@ REPO_REFRESHED=0
 # Install packages.
 ENSURE_PACKAGE '-' 'glibc.i686' 'libstdc++.i686'
 ENSURE_PACKAGE 'linux32' 'util-linux'
+ENSURE_PACKAGE 'findutils'
 ENSURE_PACKAGE 'wget'
 ENSURE_PACKAGE 'unzip'
 
 # Create group for WET Server.
 groupadd \
     --gid "${WET_GID}" \
-    wet
+    "${WET_USER}"
 
 # Create user for WET Server.
 useradd \
@@ -58,13 +61,13 @@ useradd \
     --home-dir "${WET_DIR}" \
     --comment 'Wolfenstein Enemy Territory Server' \
     --shell '/bin/bash' \
-    wet
+    "${WET_USER}"
 
 if ! [[ -f "${WET_DIR}" ]]; then
     mkdir -p "${WET_DIR}"
 fi
 
-chown -R 'wet:wet' "${WET_DIR}"
+chown -R "${WET_USER}:${WET_USER}" "${WET_DIR}"
 chmod 2750 "${WET_DIR}"
 
 if [[ -z "${1}" ]]; then
@@ -85,10 +88,8 @@ unzip "${WET_ZIP_PATH}" -d "${INSTALLER_PATH}"
 INSTALLER=$(find "${INSTALLER_PATH}" -name '*.run' | head -n 1)
 chmod +x "${INSTALLER}"
 
-# To fix known issue that happends if this directory doesn't exist.
-if [[ -d '/var/db' ]]; then
-    mkdir -p '/var/db'
-fi
+# To fix known issue that happens if this directory doesn't exist.
+[[ -d '/var/db' ]] mkdir -p '/var/db'
 
 # Run installer.
 "${INSTALLER}" \
@@ -104,7 +105,7 @@ cp -r "${INSTALLER_PATH}/etmain" "${WET_DIR}"
 cp -r "${INSTALLER_PATH}/pb" "${WET_DIR}"
 
 # Last correction for ownership and permissions.
-chown -R 'wet:wet' "${WET_DIR}"
+chown -R "${WET_USER}:${WET_USER}" "${WET_DIR}"
 chmod -R o-rwx "${WET_DIR}"
 
 # Cleanup.
