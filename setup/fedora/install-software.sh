@@ -49,6 +49,7 @@ ENSURE_PACKAGE 'linux32' 'util-linux'
 ENSURE_PACKAGE 'findutils'
 ENSURE_PACKAGE 'wget'
 ENSURE_PACKAGE 'unzip'
+ENSURE_PACKAGE 'tar'
 
 # Create group for WET Server.
 groupadd \
