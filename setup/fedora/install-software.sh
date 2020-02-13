@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Script that installs Wolfenstein Enemy Territory software on current system.
+# Script that installs Wolfenstein Enemy Territory software on the current system.
 
 WET_USER='wet'
 WET_UID='27960'
 WET_GID='27960'
 WET_DIR="/srv/${WET_USER}"
 
+# You need root permissions to run this script.
 if [[ "${UID}" != '0' ]]; then
     echo '> You need to become root to run this script.'
     echo '> Aborting.'
@@ -63,10 +64,7 @@ useradd \
     --shell '/bin/bash' \
     "${WET_USER}"
 
-if ! [[ -f "${WET_DIR}" ]]; then
-    mkdir -p "${WET_DIR}"
-fi
-
+[[ -d "${WET_DIR}" ]] || mkdir -p "${WET_DIR}"
 chown -R "${WET_USER}:${WET_USER}" "${WET_DIR}"
 chmod 2750 "${WET_DIR}"
 
@@ -79,9 +77,8 @@ fi
 WET_ZIP_NAME=$(basename "${WET_ZIP_URL}")
 WET_ZIP_PATH="/tmp/${WET_ZIP_NAME}"
 
-if [[ ! -f "${WET_ZIP_PATH}" ]]; then
-    wget "${WET_ZIP_URL}" -O "${WET_ZIP_PATH}"
-fi
+# Download archive.
+[[ -f "${WET_ZIP_PATH}" ]] || wget "${WET_ZIP_URL}" -O "${WET_ZIP_PATH}"
 
 INSTALLER_PATH="/tmp/wet-install-$(date +%s)"
 unzip "${WET_ZIP_PATH}" -d "${INSTALLER_PATH}"
@@ -89,7 +86,7 @@ INSTALLER=$(find "${INSTALLER_PATH}" -name '*.run' | head -n 1)
 chmod +x "${INSTALLER}"
 
 # To fix known issue that happens if this directory doesn't exist.
-[[ -d '/var/db' ]] mkdir -p '/var/db'
+[[ -d '/var/db' ]] || mkdir -p '/var/db'
 
 # Run installer.
 "${INSTALLER}" \
