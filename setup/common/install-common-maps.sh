@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
+# Script that downloads common maps for Wolfenstein Enemy Territory from internet.
 
-WET_DIR='/srv/wet'
+WET_USER='wet'
+WET_DIR="/srv/${WET_USER}"
 MAPS_URL='http://legacy.murda.eu/downloads/wet/maps/'
 
 # You need root permissions to run this script.
 if [[ "${UID}" != '0' ]]; then
     echo '> You need to become root to run this script.'
+    echo '> Aborting.'
+    exit 1
+fi
+
+if ! command -v wget 1> /dev/null 2>&1; then
+    echo "> Unable to find wget from your environment's PATH variable."
+    echo '> Aborting.'
     exit 1
 fi
 
 if [[ ! -d "${WET_DIR}" ]] || [[ ! -d "${WET_DIR}/etmain" ]]; then
-    echo "> Destination directory doesn't exist, terminating."
+    echo "> Destination directory doesn't exist (${WET_DIR}/etmain)."
+    echo '> Aborting.'
     exit 1
 fi
 
@@ -34,7 +44,7 @@ MAPS=( \
     'tournementdm2.pk3' \
 )
 
-for MAP in ${MAPS[@]}
+for MAP in "${MAPS[@]}"
 do
     if [[ ! -f "${WET_DIR}/etmain/${MAP}" ]]; then
         wget "${MAPS_URL}${MAP}" -O "${WET_DIR}/etmain/${MAP}"
@@ -42,8 +52,9 @@ do
 done
 
 # Last correction for ownership and permissions.
-chown -R 'wet:wet' "${WET_DIR}"
+chown -R "${WET_USER}:${WET_USER}" "${WET_DIR}"
 chmod -R o-rwx "${WET_DIR}"
 
+# Let user know that script has finished its job.
 echo '> Finished.'
 
