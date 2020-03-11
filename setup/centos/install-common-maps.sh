@@ -1,0 +1,1 @@
+../common/install-common-maps.sh
