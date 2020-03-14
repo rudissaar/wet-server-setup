@@ -2,11 +2,9 @@
 # Script that downloads and applies global configuration for ETpro server.
 
 WET_USER='wet'
-WET_UID='27960'
-WET_GID='27960'
 WET_DIR="/srv/${WET_USER}"
 
-RELATIVE_PATH=$(dirname ${0})
+RELATIVE_PATH=$(dirname "${0}")
 
 if [[ "${UID}" != '0' ]]; then
     echo '> You need to become root to run this script.'
@@ -20,7 +18,7 @@ else
     ETPRO_CONF_ZIP_URL="${1}"
 fi
 
-ETPRO_CONF_ZIP_NAME="$(basename ${ETPRO_CONF_ZIP_URL})"
+ETPRO_CONF_ZIP_NAME=$(basename "${ETPRO_CONF_ZIP_URL}")
 ETPRO_CONF_ZIP_PATH="/tmp/${ETPRO_CONF_ZIP_NAME}"
 
 if [[ ! -f "${ETPRO_CONF_ZIP_PATH}" ]]; then
