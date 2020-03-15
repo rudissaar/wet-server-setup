@@ -40,12 +40,21 @@ ENSURE_PACKAGE () {
     done
 }
 
+# Function that checks if system has enough disk space to download and expand archive.
+HAS_ENOUGH_DISK_SPACE_TO_DOWNLOAD_AND_EXPAND () {
+    AVAILABLE_DISK_SPACE=$(\df --output=avail "${1}" | tail -1)
+    ARCHIVE_SIZE=$(stat --format="%s" "${2}")
+    REQUIRED_DISK_SPACE=$(echo "${ARCHIVE_SIZE}*2.2" | bc)
+    echo "${AVAILABLE_DISK_SPACE}>${REQUIRED_DISK_SPACE}" | bc
+}
+
 # Variable that keeps track if repository is already refreshed.
 REPO_REFRESHED=0
 
 # Install packages.
 ENSURE_PACKAGE '-' 'glibc.i686' 'libstdc++.i686'
 ENSURE_PACKAGE 'linux32' 'util-linux'
+ENSURE_PACKAGE 'bc'
 ENSURE_PACKAGE 'findutils'
 ENSURE_PACKAGE 'wget'
 ENSURE_PACKAGE 'unzip'
