@@ -6,6 +6,9 @@ WET_UID='27960'
 WET_GID='27960'
 WET_DIR="/srv/${WET_USER}"
 
+DOWNLOAD_DIR='/tmp'
+DOWNLOAD_DIR_FALLBACK='/home'
+
 # You need root permissions to run this script.
 if [[ "${UID}" != '0' ]]; then
     echo '> You need to become root to run this script.'
@@ -40,11 +43,10 @@ ENSURE_PACKAGE () {
     done
 }
 
-# Function that checks if system has enough disk space to download and expand archive.
+# Function that checks if the system has enough disk space to download and expand the archive.
 HAS_ENOUGH_DISK_SPACE_TO_DOWNLOAD_AND_EXPAND () {
     AVAILABLE_DISK_SPACE=$(\df --output=avail "${1}" | tail -1)
-    ARCHIVE_SIZE=$(stat --format="%s" "${2}")
-    REQUIRED_DISK_SPACE=$(echo "${ARCHIVE_SIZE}*2.2" | bc)
+    REQUIRED_DISK_SPACE=689119310
     echo "${AVAILABLE_DISK_SPACE}>${REQUIRED_DISK_SPACE}" | bc
 }
 
@@ -84,13 +86,15 @@ else
     WET_ZIP_URL="${1}"
 fi
 
+[[ "$(HAS_ENOUGH_DISK_SPACE_TO_EXPAND '/tmp')" == '1' ]] || DOWNLOAD_DIR="${DOWNLOAD_DIR_FALLBACK}"
+
 WET_ZIP_NAME=$(basename "${WET_ZIP_URL}")
-WET_ZIP_PATH="/tmp/${WET_ZIP_NAME}"
+WET_ZIP_PATH="${DOWNLOAD_DIR}/${WET_ZIP_NAME}"
 
 # Download archive.
 [[ -f "${WET_ZIP_PATH}" ]] || wget "${WET_ZIP_URL}" -O "${WET_ZIP_PATH}"
 
-INSTALLER_PATH="/tmp/wet-install-$(date +%s)"
+INSTALLER_PATH="${DOWNLOAD_DIR}/wet-install-$(date +%s)"
 unzip "${WET_ZIP_PATH}" -d "${INSTALLER_PATH}"
 INSTALLER=$(find "${INSTALLER_PATH}" -name '*.run' | head -n 1)
 chmod +x "${INSTALLER}"
