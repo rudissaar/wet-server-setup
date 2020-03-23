@@ -46,7 +46,9 @@ ENSURE_PACKAGE () {
 # Function that checks if the system has enough disk space to download and expand the archive.
 HAS_ENOUGH_DISK_SPACE_TO_DOWNLOAD_AND_EXPAND () {
     AVAILABLE_DISK_SPACE=$(\df --output=avail "${1}" | tail -1)
-    REQUIRED_DISK_SPACE=689119310
+    ARCHIVE_SIZE=$(wget --spider --server-response -O - 2>&1 "${2}" | sed -ne '/Content-Length/{s/.*: //;p}')
+    REQUIRED_DISK_SPACE=$(echo "${ARCHIVE_SIZE}*2.5" | bc)
+    REQUIRED_DISK_SPACE=$(echo "${REQUIRED_DISK_SPACE}/1" | bc)
     echo "${AVAILABLE_DISK_SPACE}>${REQUIRED_DISK_SPACE}" | bc
 }
 
@@ -59,6 +61,7 @@ ENSURE_PACKAGE 'linux32' 'util-linux'
 ENSURE_PACKAGE 'bc'
 ENSURE_PACKAGE 'findutils'
 ENSURE_PACKAGE 'wget'
+ENSURE_PACKAGE 'sed'
 ENSURE_PACKAGE 'unzip'
 ENSURE_PACKAGE 'tar'
 
@@ -86,7 +89,7 @@ else
     WET_ZIP_URL="${1}"
 fi
 
-[[ "$(HAS_ENOUGH_DISK_SPACE_TO_EXPAND '/tmp')" == '1' ]] || DOWNLOAD_DIR="${DOWNLOAD_DIR_FALLBACK}"
+[[ "$(HAS_ENOUGH_DISK_SPACE_TO_EXPAND '/tmp' "${WET_ZIP_URL}")" == '1' ]] || DOWNLOAD_DIR="${DOWNLOAD_DIR_FALLBACK}"
 
 WET_ZIP_NAME=$(basename "${WET_ZIP_URL}")
 WET_ZIP_PATH="${DOWNLOAD_DIR}/${WET_ZIP_NAME}"
@@ -120,7 +123,7 @@ chown -R "${WET_USER}:${WET_USER}" "${WET_DIR}"
 chmod -R o-rwx "${WET_DIR}"
 
 # Cleanup.
-rm -rf "${INSTALLER_PATH}"
+rm -rf "${WET_ZIP_PATH}" "${INSTALLER_PATH}"
 
 # Let user know that script has finished its job.
 echo '> Finished.'
